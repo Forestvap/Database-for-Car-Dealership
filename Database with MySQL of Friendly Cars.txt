@@ -1,0 +1,399 @@
+
+Friendly Cars Dealership
+
+Table SalesFees
+
+SalesPrice				decimal  	8,2		PRIMARY KEY
+salesTax				decimal  	8,2
+SalesFeesforLicense            		decimal  	8,2
+LicenseFee				decimal  	8,2
+
+
+Table Insurance
+
+policyNo				VARCHAR		20		PRIMARY KEY
+TransactionNumber		        VARCHAR		20		FOREIGN KEY
+companyName				VARCHAR		50		FOREIGN KEY
+startDate				DATE 
+endDate					DATE 
+
+
+Table Warrantee
+
+WarranteeType				VARCHAR		25		PRIMARY KEY
+cost					decimal  	8,2
+period					VARCHAR		20
+
+
+Table Customer 
+
+CustomerID				VARCHAR		20		PRIMARY KEY
+FirstName				VARCHAR		20		NOT NULL; (firstName,lastName) 
+LastName 				VARCHAR		20		NOT NULL; (firstName,lastName) 
+homeStreet				VARCHAR 	50
+Zip					CHAR 		5		FOREIGN KEY
+driversLicNo				VARCHAR		10		
+EmailAddress				VARCHAR		40
+Phoneareacode				CHAR		3 
+phoneNumber				CHAR		7 
+TransactionNumber			VARCHAR 	20		NOT NULL, FOREIGN KEY 
+
+Table VehicleModels
+
+Model                               VARCHAR      20                   primary key
+Manufacturer                        VARCHAR      20		      primary key
+Capacity                            decimal       8,2
+Weight                              decimal       8,2
+NumberofDoors                       decimal       8,2
+NumberofCylinders                   decimal       8,2
+Vehicle_Description                 VARCHAR      20
+
+
+Table Trade-In
+
+VehicleID                           VARCHAR       17                   primary key
+TransactionNumber                   VARCHAR	  8,2                  foreign key
+TradeinName                         VARCHAR       20
+TradeinDate                         DATE
+CurrentMileage                      decimal       50
+TradeinValue                        decimal       10,2
+Vehicle_acquisition_price           decimal       8,2
+
+Table SalesPerson
+
+salesPersonCode				VARCHAR		20 	NOT NULL; PRIMARY KEY
+lastName				VARCHAR		20	NOT NULL; (firstName,lastName) 
+firstName				VARCHAR		15	NOT NULL; (firstName,lastName) 
+street					VARCHAR		50 
+city 					VARCHAR		15 	 
+state 					CHAR		2	
+zip 					CHAR		5	
+homeAreaCode				CHAR		3
+homePhoneNumber				CHAR		7
+cellPhoneNumber				CHAR		10
+officePhoneNumber			CHAR		10
+TransactionNumber			VARCHAR		20	NOT NULL; FOREIGN KEY 
+
+Table Inventory
+
+VehicleID				VARCHAR		17	NOT NULL; PRIMARY KEY
+Vehicle_acquisition_price		decimal		15
+
+Table Vehicle
+
+VehicleID				VARCHAR		17	NOT NULL; PRIMARY KEY
+model					VARCHAR		20	FOREIGN KEY
+manufacturerOtherDetails		VARCHAR		50
+manufacturerDate			DATE
+manufacturerDateofDelivery		DATE
+Warranteetype				VARCHAR		25	FOREIGN KEY
+
+Table SalesPerformanceData
+
+salesPersonCode				VARCHAR		17	NOT NULL; PRIMARY KEY
+TransactionNumber			VARCHAR		20	NOT NULL; FOREIGN KEY 
+CommEarned				decimal		8,2
+TotalSales				decimal		8,2
+totalComm				decimal		8,2
+
+Table Sales
+
+TransactionNumber     VARCHAR	     20                 	            primary key
+SalesPrice            decimal  	     8,2	                            foreign key
+SaleDate              DATE 
+SalesPersonCode       VARCHAR        20              NOT NULL               
+
+Table InsuranceCompanies
+
+companyName           VARCHAR        50                                     primary key
+companyAdd            VARCHAR 	     50          
+companyPhone          CHAR	     10	
+
+
+Table Survey
+
+TransactionNumber     VARCHAR 	     20		                            primary key & foreign key
+CustomerID            VARCHAR	     20               NOT NULL              foreign key
+customerOpinion       VARCHAR 	     100
+dealershipRating      VARCHAR 	     100
+salespersonRating     VARCHAR 	     100
+carRating             VARCHAR 	     100
+WhereDoYouKnowAboutUs VARCHAR 	     100
+SalesPersonCode       VARCHAR        20              NOT NULL
+VehicleID             VARCHAR        17              NOT NULL               foreign key
+
+
+Table Totals
+ 
+SalesPrice            decimal  	     8,2                                    Primary Key & foreign key
+TotalSales            decimal  	     8,2                                    Primary Key
+totalComm             decimal  	     8,2                                    Primary Key
+
+
+Table Zip
+
+Zip                   CHAR  	     5		                            primary key
+City                  VARCHAR        15					    Primary Key
+State                 CHAR           2					    Primary Key
+
+
+Step 5.2 Write SQL statements to create all tables needed to implement the design
+
+CREATE Table SalesFees (
+	SalesPrice				decimal  	(8,2),		
+	salesTax				decimal  	(8,2),
+	SalesFeesforLicense		        decimal  	(8,2),
+	LicenseFee				decimal  	(8,2),
+	CONSTRAINT SalesFees_SalesPrice_pk PRIMARY KEY (SalesPrice));
+
+	
+CREATE Table Insurance (
+	policyNo				VARCHAR		(20),
+	TransactionNumber		        VARCHAR		(20) NOT NULL,		
+	companyName				VARCHAR		(50),		
+	startDate				DATE, 
+	endDate					DATE, 
+	CONSTRAINT Insurance_policyNo_pk PRIMARY KEY (policyNo),
+	CONSTRAINT Insurance_TransactionNumber_fk FOREIGN KEY(TransactionNumber) REFERENCES Sales (TransactionNumber),
+	CONSTRAINT Insurance_companyName_fk FOREIGN KEY(companyName) REFERENCES InsuranceCompanies (companyName));
+
+	
+CREATE Table Warrantee (
+	WarranteeType				VARCHAR		(25),		
+	cost					decimal  	(8,2),
+	period					VARCHAR		(20),
+	CONSTRAINT Warrantee_WarranteeType_cost_pk PRIMARY KEY (WarranteeType, cost));
+ 
+
+ alter table warrantee add foreign key warrantee_cost_fk;
+alter table customer modify customerid varchar (20); 	
+
+
+CREATE Table Customer (
+	CustomerID				VARCHAR		(20),
+	FirstName				VARCHAR		(20)		NOT NULL,
+	LastName 				VARCHAR		(20)		NOT NULL, 
+	homeStreet				VARCHAR 	(50),
+	Zip					CHAR 	        (5),
+	driversLicNo				VARCHAR		(10),		
+	EmailAddress				VARCHAR		(40),
+	Phoneareacode				CHAR		(3), 
+	phoneNumber				CHAR		(7), 
+	TransactionNumber			VARCHAR 	(20)		NOT NULL,
+	CONSTRAINT Customer_CustomerID_pk PRIMARY KEY (CustomerID),
+	CONSTRAINT Customer_zip_fk FOREIGN KEY(zip) REFERENCES zip (zip),
+	CONSTRAINT Customer_TransactionNumber_fk FOREIGN KEY(TransactionNumber) REFERENCES Sales (TransactionNumber));
+
+
+ alter table customer modify transactionnumber varchar (20);  
+ alter table salesperformancedata modify transactionnumber varchar (20);
+
+
+Create Table VehicleModels(
+
+                   
+                   Model                               VARCHAR       (20),                 
+		   Manufacturer                        VARCHAR       (20),
+                   Capacity                            decimal       (8,2),
+                   Weight                              decimal       (8,2),
+                   NumberofDoors                       decimal       (8,2),
+                   NumberofCylinders                   decimal       (8,2),
+                   Vehicle_Description                 VARCHAR      (20),
+CONSTRAINT VehicleModels_Model_Manufacturer_pk PRIMARY KEY (Model,Manufacturer));
+                 
+
+
+Create Table TradeIn (VehicleID                           VARCHAR(17)       ,                  
+                      TransactionNumber                   varchar       (20) NOT NULL,                  
+                      TradeinName                         VARCHAR      (20),
+                      TradeinDate                         DATE,
+                      CurrentMileage                      decimal       (50),
+                      TradeinValue                        decimal      (10,2),
+                      Vehicle_acquisition_price           decimal       (8,2),
+          Constraint TradeIn_VehicleID_pk PRIMARY KEY (VehicleID),
+	  CONSTRAINT TradeIn_TransactionNumber_fk FOREIGN KEY(TransactionNumber) REFERENCES Sales (TransactionNumber));
+
+CREATE Table SalesPerson (
+		salesPersonCode 		VARCHAR(20) NOT NULL,
+		lastName			VARCHAR(20) NOT NULL,
+		firstName			VARCHAR(15) NOT NULL,
+		street				VARCHAR(50) NOT NULL,
+		city 				VARCHAR(15),
+		state				CHAR(2),
+		zip 				CHAR 	(5),	
+		homeAreaCode			CHAR(3),
+		homePhoneNumber			CHAR(7),
+		cellPhoneNumber			CHAR(10),
+		officePhoneNumber		CHAR(10),
+		TransactionNumber		VARCHAR(20) NOT NULL,
+		CONSTRAINT SalesPerson_salesPersonCode_pk primary key (salesPersonCode),
+		CONSTRAINT SalesPerson_TransactionNumber_fk foreign key (TransactionNumber) REFERENCES Sales (TransactionNumber));
+				
+CREATE Table Inventory (
+		VehicleID					VARCHAR(17) NOT NULL,
+		Vehicle_acquisition_price			decimal(15),
+		CONSTRAINT Inventory_VehicleID_pk primary key (VehicleID));
+		
+CREATE Table Vehicle (
+		VehicleID					VARCHAR(17)	NOT NULL,
+		model						VARCHAR(20),
+		manufacturerOtherDetails			VARCHAR(50),
+		manufacturerDate				DATE,
+		manufacturerDateofDelivery			DATE,
+		Warranteetype					VARCHAR		(25),
+		CONSTRAINT Vehicle_VehicleID_pk primary key (VehicleID),
+		CONSTRAINT Vehicle_model_fk foreign key (model) REFERENCES VehicleModels (model),
+		CONSTRAINT Vehicle_Warranteetype_fk foreign key (Warranteetype) REFERENCES Warrantee (Warranteetype));
+		
+CREATE Table SalesPerformanceData (
+		salesPersonCode			VARCHAR(20)	NOT NULL,
+		TransactionNumber		VARCHAR (20) 	NOT NULL,
+		CommEarned			decimal(8,2),
+		TotalSales			decimal(8,2),
+		totalComm			decimal(8,2),
+		CONSTRAINT SalesPerformanceData_salesPersonCode_pk primary key (salesPersonCode),
+		CONSTRAINT SalesPerformanceData_TransactionNumber_fk foreign key (TransactionNumber) REFERENCES Sales (TransactionNumber));	
+
+CREATE Table Sales (TransactionNumber    	VARCHAR(20),	
+		   SaleDate              	DATE, 
+		   SalesPersonCode       	VARCHAR(20) 	NOT NULL,
+		   SalesPrice            	decimal(8,2),	
+		   CONSTRAINT Sales_TransactionNumber_pk primary key (TransactionNumber),
+		   CONSTRAINT Sales_SalesPrice_fk foreign key (SalesPrice) REFERENCES SalesFees (SalesPrice)); 
+		 
+		 
+ alter table tradein modify VehicleID                 VARCHAR(17) ;      
+alter table insurance drop foregin key insurance_companyname_fk;
+
+CREATE Table InsuranceCompanies 
+
+		  (
+                   companyName           VARCHAR             (50),            
+		   companyAdd            VARCHAR             (50),
+		   companyPhone          CHAR                (10),	
+		   CONSTRAINT InsuranceCompanies_companyName_pk primary key (companyName));
+
+CREATE Table Survey
+
+		  (TransactionNumber     VARCHAR 	     (20) ,               
+		   CustomerID            VARCHAR	     (20)   NOT NULL,               
+		   customerOpinion       VARCHAR 	     (100),
+		   dealershipRating      VARCHAR 	     (100),
+		   salespersonRating     VARCHAR 	     (100),
+		   carRating             VARCHAR 	     (100),
+		   WhereDoYouKnowAboutUs VARCHAR 	     (100),
+		   SalesPersonCode       VARCHAR             (20)   NOT NULL,
+		   VehicleID             VARCHAR             (17)   NOT NULL,               
+		   CONSTRAINT Survey_TransactionNumber_pk PRIMARY KEY (TransactionNumber),
+		   CONSTRAINT Survey_TransactionNumber_fk FOREIGN KEY (TransactionNumber) REFERENCES Sales (TransactionNumber),
+		   CONSTRAINT Survey_customerID_fk FOREIGN KEY (customerID) REFERENCES Customer (customerID),
+		   CONSTRAINT Survey_VehicleID_fk FOREIGN KEY (VehicleID) REFERENCES Vehicle (VehicleID));
+
+CREATE Table Totals 
+ 
+		  (SalesPrice            decimal  	     (8,2),               
+		   TotalSales            decimal  	     (8,2),               
+		   totalComm             decimal  	     (8,2), 
+		   CONSTRAINT Totals_SalesPrice_TotalSales_totalComm_pk PRIMARY KEY (SalesPrice,TotalSales,totalComm),
+                   CONSTRAINT Totals_SalesPrice_fk FOREIGN KEY(SalesPrice) REFERENCES SalesFees (SalesPrice));
+
+CREATE Table Zip
+
+		  (
+		   Zip                   CHAR  	             (5),		
+		   City                  VARCHAR             (15),
+		   State                 CHAR                (2),
+		   CONSTRAINT Zip_Zip_City_State_pk PRIMARY KEY (Zip,City,State));
+
+Step 5.4 Write at least five Insert statements for five records in each table, preserving all constraints. Put in enough data to demonstrate how the database will function
+
+
+INSERT INTO SalesFees VALUES ('20000', '21775', '20','50'); 
+INSERT INTO SalesFees VALUES ('30000', '32662.5', '20','50'); 
+INSERT INTO SalesFees VALUES ('10000', '10887.5', '20','50'); 
+INSERT INTO SalesFees VALUES ('15000', '16331.25', '20','50'); 
+INSERT INTO SalesFees VALUES ('18000', '19597.5', '20','50'); 
+
+INSERT INTO Insurance VALUES ('ABC123456', '1234567890123', 'Seneca Insurance','2013-02-09','2014-02-09');
+INSERT INTO Insurance VALUES ('ABC123457', '1234567890456', 'Tower Group Companies','2013-03-09','2014-03-09');
+INSERT INTO Insurance VALUES ('ABC123458', '1234567890789', 'Campbell Solberg Associates Inc','2012-11-09','2013-11-09');
+INSERT INTO Insurance VALUES ('ABC123459', '1234567890321', 'American Interanational Group Inc','2013-01-09','2014-01-09');
+INSERT INTO Insurance VALUES ('ABC123450', '1234567890654', 'Greater New York Insurance Co','2012-12-09','2013-02-09');
+
+INSERT INTO Warrantee VALUES ('standard60k', '1500', '1');
+INSERT INTO Warrantee VALUES ('standard60k', '1000', '2');
+INSERT INTO Warrantee VALUES ('extended90k', '2500', '2');
+INSERT INTO Warrantee VALUES ('extended90k', '1800', '2');
+INSERT INTO Warrantee VALUES ('used30days', '1000', '2');
+
+INSERT INTO Customer VALUES ('189132465', 'San', 'Zhang', '13 Cherry Street New York', '10010', '012345678', 'sanzhang@gmail.com', '123', '4567890', '1234567890123');
+INSERT INTO Customer VALUES ('289132465', 'Si', 'Li', '30 Newport Pkwy Jersey City', '07310', '022345678', 'sili@gmail.com', '123', '5567890', '1234567890456');
+INSERT INTO Customer VALUES ('389132465', 'Mei', 'Diane', '40 Newport Pkwy Jersey City', '07310', '032345678', 'meidiane@gmail.com', '123', '6567890', '1234567890789');
+INSERT INTO Customer VALUES ('489132465', 'Alex', 'Hadden', '15 Cherry Street New York', '10010', '042345678', 'alexhadden@gmail.com', '123', '7567890', '1234567890321');
+INSERT INTO Customer VALUES ('589132465', 'Mike', 'Finizio', '16 Cherry Street New York', '10010', '052345678', 'mikefinizio@gmail.com', '123', '8567890', '1234567890654');
+
+INSERT INTO VehicleModels VALUES ('taurus', 'ford', '5', '3800', '4', '4', 'black');
+INSERT INTO VehicleModels VALUES ('mustang', 'ford', '4', '4000', '2', '6', 'blue');
+INSERT INTO VehicleModels VALUES ('camaro', 'chevrolet', '4', '3700', '2', '6', 'red');
+INSERT INTO VehicleModels VALUES ('celica', 'toyota', '4', '3400', '2', '6', 'white');
+INSERT INTO VehicleModels VALUES ('camry', 'toyota', '5', '3600', '4', '4', 'black');
+
+INSERT INTO TradeIn VALUES ('LBDLAKJDC59813553', '1234567890123','98Camry', '02/04/08', '140000', '3000', '2500');
+INSERT INTO TradeIn VALUES ('LBDLAKJDC59813554', '1234567890456','02Corolla', '09/05/07', '90000', '5000', '4500');
+INSERT INTO TradeIn VALUES ('LBDLAKJDC59813555', '1234567890789','05Altima', '03/01/12', '50000', '7000', '6500');
+INSERT INTO TradeIn VALUES ('LBDLAKJDC59813556', '1234567890321','01Sentra', '06/11/09', '100000', '4500', '4000');
+INSERT INTO TradeIn VALUES ('LBDLAKJDC59813557', '1234567890654','02Lemona', '10/05/10', '200000', '2000', '1500');
+
+INSERT INTO SalesPerson  VALUES ('12345678910111215161', 'Sundstrom', 'John', '11 Cherry Street', 'New York', 'NY', '10010', '212', '5555555', 'null', 'null', '1234567890123');
+INSERT INTO SalesPerson  VALUES ('12345678910111215162', 'Mickelson', 'Sam', '142 Edgewood Ave', 'New York', 'NY', '10012', '212', '5555556', 'null', 'null', '1234567890456');
+INSERT INTO SalesPerson  VALUES ('12345678910111215163', 'Crowder', 'Boyd', '15 Rose Street', 'New York', 'NY', '10016', '212', '5555557', 'null', 'null', '1234567890789');
+INSERT INTO SalesPerson  VALUES ('12345678910111215164', 'Grimes', 'Rick', '11 Jefferson Street', 'New York', 'NY', '10011', '212', '5555558', 'null', 'null', '1234567890321');
+INSERT INTO SalesPerson  VALUES ('12345678910111215165', 'Walker', 'Michael', '11 Newman Street', 'New York', 'NY', '10010', '212', '5555552', 'null', 'null', '1234567890654');
+
+INSERT INTO Inventory VALUES ('LBDLAKJDC59813553', '31000.00');
+INSERT INTO Inventory VALUES ('LBDLAKJDC59813554', '30000.00');
+INSERT INTO Inventory VALUES ('LBDLAKJDC59813555', '32095.00');
+INSERT INTO Inventory VALUES ('LBDLAKJDC59813556', '32520.00');
+INSERT INTO Inventory VALUES ('LBDLAKJDC59813557', '30520.00');
+
+INSERT INTO Vehicle VALUES ('LBDLAKJDC59813553', 'mustang', 'null', '2010-1-20', '2012-2-20', 'standard60k');
+INSERT INTO Vehicle VALUES ('LBDLAKJDC59813554', 'taurus', 'null', '2010-1-1', '2012-2-2', 'standard60k');
+INSERT INTO Vehicle VALUES ('LBDLAKJDC59813555', 'camaro', 'null', '2010-2-3', '2012-2-10', 'extended90k');
+INSERT INTO Vehicle VALUES ('LBDLAKJDC59813556', 'camry', 'null', '2010-3-1', '2012-4-1', 'standard60k');
+INSERT INTO Vehicle VALUES ('LBDLAKJDC59813557', 'celica', 'null', '2009-1-1', '2011-5-1', 'used30days');
+
+INSERT INTO SalesPerformanceData VALUES ('12345678910111215161', '1234567890123', '500', '300000', '5000');
+INSERT INTO SalesPerformanceData VALUES ('12345678910111215162', '1234567890456', '550', '320000', '5500'); 
+INSERT INTO SalesPerformanceData VALUES ('12345678910111215163', '1234567890789', '600', '340000', '6000'); 
+INSERT INTO SalesPerformanceData VALUES ('12345678910111215164', '1234567890321', '450', '290000', '4750'); 
+INSERT INTO SalesPerformanceData VALUES ('12345678910111215165', '1234567890654', '525', '310000', '5250'); 
+
+insert into Sales values ('1234567890123', '2013-02-09', '123456789','20000'); 
+insert into Sales values ('1234567890456', '2013-03-09', '456789123','30000'); 
+insert into Sales values ('1234567890789', '2012-11-09', '987456123','10000'); 
+insert into Sales values ('1234567890321', '2013-01-09', '456987789','15000'); 
+insert into Sales values ('1234567890654', '2012-12-09', '345678941','18000'); 
+
+insert into InsuranceCompanies values ('Seneca Insurance', '160 Water St New York', '2123443000'); 
+insert into InsuranceCompanies values ('Tower Group Companies', '120 Broadway New York', '2126552000'); 
+insert into InsuranceCompanies values ('Campbell Solberg Associates Inc', '110 William St New York', '8008746172'); 
+insert into InsuranceCompanies values ('American Interanational Group Inc', '180 Maiden Ln No.4 New York', '2127707000'); 
+insert into InsuranceCompanies values ('Greater New York Insurance Co', '200 Madison Ave No.3 New York', '2126839700'); 
+
+insert into Survey values ('1234567890123', '189132465', 'Expensive', 'Good','Fair enough','Good','Friends','12345678910111215161','LBDLAKJDC59813553');  
+insert into Survey values ('1234567890456', '289132465', 'Cheap', 'Fair enough','Excellent','Good','Newspaper','12345678910111215162','LBDLAKJDC59813554');
+insert into Survey values ('1234567890789', '389132465', 'Good quality', 'Fair enough','Good','Good','Advertisement','12345678910111215163','LBDLAKJDC59813555');
+insert into Survey values ('1234567890321', '489132465', 'Good price', 'Good','Good','Excellent','Internet','12345678910111215164','LBDLAKJDC59813556');
+insert into Survey values ('1234567890654', '589132465', 'Better services', 'Excellent','Fair enough','Good','Internet','12345678910111215165','LBDLAKJDC59813557');
+
+insert into Totals values ('20000', '23000', '200'); 
+insert into Totals values ('30000', '34000', '300'); 
+insert into Totals values ('10000', '12000', '100'); 
+insert into Totals values ('15000', '18000', '150'); 
+insert into Totals values ('18000', '21000', '180'); 
+
+insert into Zip values ('10010', 'New york city', 'NY');
+insert into Zip values ('07310', 'Jersey city', 'NJ');
+insert into Zip values ('07030', 'Hoboken', 'NJ');
+insert into Zip values ('10012', 'New york city', 'NY');
+insert into Zip values ('10016', 'New york city', 'NY');
